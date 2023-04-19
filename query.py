@@ -38,9 +38,32 @@ def find_last(df: pd.DataFrame, stop: str):
 
 
 if __name__=="__main__":
-    sched = grab_data(direction=0)
-    print(find_next_shuttle(sched, "Chicago/Sheridan", 1520))
-    print(find_departure_time_to_arrive_by(sched, "Chicago/Sheridan", "Arrive Ward", 1700))
-    print(find_arrival_time_if_leaving_at(sched, "Chicago/Sheridan", "Arrive Ward", 1520))
-    print(find_first(sched, "Arrive Ward"))
-    print(find_last(sched, "Arrive Ward"))
+    dir = int(input("\nPlease enter 0 if going to Chicago, 1 if going to Evanston.\n"))
+    sched = grab_data(direction=dir)
+    fun = int(input("\nPlease input:\n0 for next shuttle \n1 for Depart to Arrive by \n2 for Arrive Leaving at \n3 for First\n4 for last\n"))
+    if fun in {0, 3, 4}:
+        stop = input("\nWhat stop did you want to inquire about? ")
+    else:
+        source = input("\nWhat stop will you leave from?\n")
+        dest = input("\nWhat stop are you going to?\n")
+    if fun in {0, 1, 2}:
+        time = int(input("\nWhat time did you have in mind?\n"))
+    print("\nTime: ")
+    
+    if fun == 0:
+        print(find_next_shuttle(sched, stop, time))
+    elif fun == 1:
+        print(find_departure_time_to_arrive_by(sched, source, dest, time))
+    elif fun == 2:
+        print(find_arrival_time_if_leaving_at(sched, source, dest, time))
+    elif fun == 3:
+        print(find_first(sched, stop))
+    elif fun == 4:
+        print(find_last(sched, stop))
+    
+
+    # print(find_next_shuttle(sched, "Chicago/Sheridan", 1520))
+    # print(find_departure_time_to_arrive_by(sched, "Chicago/Sheridan", "Arrive Ward", 1700))
+    # print(find_arrival_time_if_leaving_at(sched, "Chicago/Sheridan", "Arrive Ward", 1520))
+    # print(find_first(sched, "Arrive Ward"))
+    # print(find_last(sched, "Arrive Ward"))

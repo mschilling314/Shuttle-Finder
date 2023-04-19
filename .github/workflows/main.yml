@@ -1,4 +1,4 @@
-name: Test webscrape
+name: Make a Query
 
 on:
   workflow_dispatch:
@@ -20,4 +20,4 @@ jobs:
       - name: Run the test
         run: |
           source .venv/bin/activate
-          python webscrape.py
+          python query.py
