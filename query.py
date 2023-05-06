@@ -140,4 +140,9 @@ def query_from_structured_input() -> None:
     
 
 if __name__=="__main__":
-    query_from_structured_input()
+    cont = True
+    while cont:
+        query_from_structured_input()
+        contin = input("Input 0 to quit, or any other key to continue.")
+        if contin == "0":
+            cont = False
