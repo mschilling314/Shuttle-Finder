@@ -112,37 +112,74 @@ def find_last(df: pd.DataFrame, stop: str) -> int:
     return df[stop][len(df[stop])-1]
 
 
-def query_from_structured_input() -> None:
+def cli_input() -> dict:
     """
-    Meant to make a query based on a series of answers to questions.  Need to fix to fail gracefully.
+    Prompts a user for various inputs in order to make a structured query.
+
+    Output is structured as a dictionary with the following str keys:
+    fun (required): holds an integer from 0-4 inclusive, corresponding to a query
+    dir (required): holds either 0 or 1 as an integer, corresponds to the direction we're going in
+    src: str for a stop, corresponds to departure and arrival time queries
+    dst: str for a stop, corresponds to departure and arrival time queries
+    time: formatted int (hmm or hhmm) required for next, departure, arrival time queries
+    stop: str for a stop, corresponds to next, first, last queries
     """
-    dir = int(input("\nPlease enter 0 if going to Chicago, 1 if going to Evanston.\n"))
-    sched = grab_data(direction=dir)
-    fun = int(input("\nPlease input:\n0 for next shuttle \n1 for Depart to Arrive by \n2 for Arrive Leaving at \n3 for First\n4 for last\n"))
-    if fun in {0, 3, 4}:
-        stop = input("\nWhat stop did you want to inquire about? ")
+    res = {}
+    res["dir"] = int(input("\nPlease enter 0 if going to Chicago, 1 if going to Evanston.\n"))
+    res["fun"] = int(input("\nPlease input:\n0 for next shuttle \n1 for Depart to Arrive by \n2 for Arrive Leaving at \n3 for First\n4 for last\n"))
+    if res["fun"] in {0, 3, 4}:
+        res["stop"] = input("\nWhat stop did you want to inquire about? ")
     else:
-        source = input("\nWhat stop will you leave from?\n")
-        dest = input("\nWhat stop are you going to?\n")
-    if fun in {0, 1, 2}:
-        time = int(input("\nWhat time did you have in mind?\n"))
-    print("\nTime: ")
-    if fun == 0:
-        print(find_next_shuttle(sched, stop, time))
-    elif fun == 1:
-        print(find_departure_time_to_arrive_by(sched, source, dest, time))
-    elif fun == 2:
-        print(find_arrival_time_if_leaving_at(sched, source, dest, time))
-    elif fun == 3:
-        print(find_first(sched, stop))
-    elif fun == 4:
-        print(find_last(sched, stop))
-    
+        res["src"] = input("\nWhat stop will you leave from?\n")
+        res["dst"] = input("\nWhat stop are you going to?\n")
+    if res["fun"] in {0, 1, 2}:
+        res["time"] = int(input("\nWhat time did you have in mind?\n"))
+    return res
+
+
+def query_for_time(**kwargs) -> int:
+    """
+    Using properly structured input, returns an integer corresponding to the time resulting from the query.
+
+    Input:
+    fun (required): holds an integer from 0-4 inclusive, corresponding to a query
+    dir (required): holds either 0 or 1 as an integer, corresponds to the direction we're going in
+    src: str for a stop, corresponds to departure and arrival time queries
+    dst: str for a stop, corresponds to departure and arrival time queries
+    time: formatted int (hmm or hhmm) required for next, departure, arrival time queries
+    stop: str for a stop, corresponds to next, first, last queries
+
+    Output:
+    time: an int formatted as hmm or hhmm
+    """
+    if "fun" not in kwargs.keys() or "dir" not in kwargs.keys():
+        raise ValueError("Function or direction missing from query.")
+    sched = grab_data(direction=kwargs["dir"])
+    fun = kwargs["fun"]
+    try:
+        if fun == 0:
+            time = find_next_shuttle(sched, kwargs["stop"], kwargs["time"])
+        elif fun == 1:
+            time = find_departure_time_to_arrive_by(sched, kwargs["src"], kwargs["dst"], kwargs["time"])
+        elif fun == 2:
+            time = find_arrival_time_if_leaving_at(sched, kwargs["src"], kwargs["dst"], kwargs["time"])
+        elif fun == 3:
+            time = find_first(sched, kwargs["stop"])
+        elif fun == 4:
+            time = find_last(sched, kwargs["stop"])
+        else:
+            raise ValueError("Invalid function argument given.")
+    except:
+        raise ValueError("Invalid arguments given.")
+    return time
+
 
 if __name__=="__main__":
     cont = True
     while cont:
-        query_from_structured_input()
-        contin = input("Input 0 to quit, or any other key to continue.")
+        structured_input = cli_input()
+        time = query_for_time(**structured_input)
+        print(f"\nThe time that results from your query is: {time}\n")
+        contin = input("Input 0 to quit, or any other key to continue. ")
         if contin == "0":
             cont = False
