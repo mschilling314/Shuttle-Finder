@@ -26,7 +26,10 @@ def cli_input() -> dict:
     return res
 
 
-def run_cli():
+def run_cli() -> None:
+    """
+    Runs the CLI, performing a query on the Intercampus database as per user inputs, looping until the user wants to stop.
+    """
     cont = True
     while cont:
         structured_input = cli_input()
