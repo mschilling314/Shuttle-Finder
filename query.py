@@ -113,12 +113,13 @@ def find_last(df: pd.DataFrame, stop: str) -> int:
     return df[stop][len(df[stop])-1]
 
 
-def clean_stop_inputs(stops, df):
+def clean_stop_inputs(stops, df) -> list:
     res = []
     for stop in stops:
         s = stop
         if s not in df.columns:
             s = parsing.parse_v1(stop, df.columns)
+        print(s)
         res.append(s)
     return res
 
@@ -145,7 +146,8 @@ def query_for_time(**kwargs) -> int:
     try:
         if fun == 0:
             stop = clean_stop_inputs(kwargs["stop"], sched)
-            time = find_next_shuttle(sched, stop, kwargs["time"])
+            # print(f"{kwargs['stop']} {stop}")
+            time = find_next_shuttle(sched, stop[0], kwargs["time"])
         elif fun == 1:
             src, dst = clean_stop_inputs([kwargs["src"], kwargs["dst"]], sched)
             time = find_departure_time_to_arrive_by(sched, src, dst, kwargs["time"])
@@ -154,10 +156,10 @@ def query_for_time(**kwargs) -> int:
             time = find_arrival_time_if_leaving_at(sched, src, dst, kwargs["time"])
         elif fun == 3:
             stop = clean_stop_inputs(kwargs["stop"], sched)
-            time = find_first(sched, stop)
+            time = find_first(sched, stop[0])
         elif fun == 4:
             stop = clean_stop_inputs(kwargs["stop"], sched)
-            time = find_last(sched, stop)
+            time = find_last(sched, stop[0])
         else:
             raise ValueError("Invalid function argument given.")
     except:
