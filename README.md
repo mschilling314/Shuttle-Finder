@@ -13,7 +13,6 @@ Right now, it's not very user-friendly.  To use it, you'd need to clone the repo
 - Refactor the code for easier expansion in the future
 - Create input-cleaning necessary to interact with query.py in a more intuitive, less rigid manner
   - For now, fix this so that it re-prompts for unclear/invalid input?
-  - Error when using anything but Depart and Arrive queries based on input sanitation, currently think error is below parsing.py
 - Create terminal interface to launch the query
 - Add browser querying?
 - Add texting integration?
