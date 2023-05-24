@@ -1,0 +1,34 @@
+
+name: Update Database
+
+on:
+  schedule:
+    - cron: "0 9 1 * *"
+  workflow_dispatch:
+
+jobs:
+  update_database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Update the Database
+        run: |
+          python webscrape.py
+
+      - name: Commit and Push changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: Schedule Updator
+          author_email: mschilling52019@gmail.com
+          message: Update database
