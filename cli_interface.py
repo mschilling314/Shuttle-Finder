@@ -22,7 +22,22 @@ def cli_input() -> dict:
         res["src"] = input("\nWhat stop will you leave from?\n")
         res["dst"] = input("\nWhat stop are you going to?\n")
     if res["fun"] in {0, 1, 2}:
-        res["time"] = int(input("\nWhat time did you have in mind?\n"))
+        res["time"] = input("\nWhat time did you have in mind?\n")
+    return res
+
+
+def format_time(t: int) -> str:
+    minu = t % 100
+    hour = t // 100
+    indicator = False
+    if hour > 12:
+        indicator = True
+        hour -= 12
+    res = f"{hour}:{minu} "
+    if indicator:
+        res += "PM"
+    else: 
+        res += "AM"
     return res
 
 
@@ -34,7 +49,8 @@ def run_cli() -> None:
     while cont:
         structured_input = cli_input()
         time = query_for_time(**structured_input)
-        print(f"\nThe time that results from your query is: {time}\n")
+        f_time = format_time(t=time)
+        print(f"\nThe time that results from your query is {f_time}.\n")
         contin = input("Input 0 to quit, or any other key to continue. ")
         if contin == "0":
             cont = False
