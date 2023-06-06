@@ -118,7 +118,7 @@ def clean_stop_inputs(stops, df) -> list:
     for stop in stops:
         s = stop
         if s not in df.columns:
-            s = parsing.parse_v1(stop, df.columns)
+            s = parsing.parse_v2(stop, df.columns)
         res.append(s)
     return res
 
@@ -145,13 +145,13 @@ def query_for_time(**kwargs) -> int:
     try:
         if fun == 0:
             stop = clean_stop_inputs([kwargs["stop"]], sched)
-            time = find_next_shuttle(sched, stop[0], kwargs["time"])
+            time = find_next_shuttle(sched, stop[0], parsing.parse_time(kwargs["time"]))
         elif fun == 1:
             src, dst = clean_stop_inputs([kwargs["src"], kwargs["dst"]], sched)
-            time = find_departure_time_to_arrive_by(sched, src, dst, kwargs["time"])
+            time = find_departure_time_to_arrive_by(sched, src, dst, parsing.parse_time(kwargs["time"]))
         elif fun == 2:
             src, dst = clean_stop_inputs([kwargs["src"], kwargs["dst"]], sched)
-            time = find_arrival_time_if_leaving_at(sched, src, dst, kwargs["time"])
+            time = find_arrival_time_if_leaving_at(sched, src, dst, parsing.parse_time(kwargs["time"]))
         elif fun == 3:
             stop = clean_stop_inputs([kwargs["stop"]], sched)
             time = find_first(sched, stop[0])
