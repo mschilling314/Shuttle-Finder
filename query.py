@@ -162,5 +162,5 @@ def query_for_time(**kwargs) -> int:
             raise ValueError("Invalid function argument given.")
     except:
         raise ValueError("Invalid arguments given.")
-    return time
+    return int(time)
 
