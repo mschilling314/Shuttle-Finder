@@ -47,7 +47,7 @@ def min_edit_distance(source: str, target: str) -> int:
     return int(dist[n, m])
 
 
-def most_likely_match(user_word: str, possibilities: list[str]) -> str:
+def most_likely_match(user_word: str, possibilities: list) -> str:
     best_match = possibilities[0]
     dist = min_edit_distance(user_word.upper(), possibilities[0].upper())
     for possibility in possibilities:

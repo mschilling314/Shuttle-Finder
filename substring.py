@@ -1,4 +1,7 @@
-def find_possible_meaning(user_string: str, stops: list[str]):
+def find_possible_meaning(user_string: str, stops: list) -> list:
+    """
+    Takes in a user input and a list of possible stops, returns a list for which the user input is a substring of the stops.
+    """
     res = []
     user_string_cleaned = user_string.upper()
     for stop in stops:
